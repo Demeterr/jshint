@@ -390,6 +390,8 @@ var JSHINT = (function () {
 		}
 
 		if (state.option.assumestrict) {
+			if (state.option.strict !== false) state.option.strict = true;
+			state.option.undef = true;
 			state.directive["use strict"] = true;
 		}
 

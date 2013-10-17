@@ -1078,11 +1078,22 @@ exports.globalstrict = function (test) {
 
 /** Option `assumestrict` assumes a global "use strict"; is in effect */
 exports.assumestrict = function (test) {
-	var code = 'function callCallee() { return arguments.callee; }';
+	var code = [
+		'"use strict";',
+		'foo=123;',
+		'function callCallee() { return arguments.callee; }'
+	];
 
 	TestRun(test)
-		.addError(1, 'Strict violation.')
-		.test(code, { esnext: true, assumestrict: true });
+		.addError(1, 'Use the function form of "use strict".')
+		.addError(2, "'foo' is not defined.")
+		.addError(3, 'Strict violation.')
+		.test(code, { esnext: true });
+
+	TestRun(test)
+		.addError(1, "'foo' is not defined.")
+		.addError(2, 'Strict violation.')
+		.test(code.slice(1), { esnext: true, assumestrict: true });
 
 	test.done();
 };
